@@ -94,7 +94,13 @@ def find_requirements(folder_path):
     import_pattern = re.compile(r'^\s*import\s+(\w+)|^\s*from\s+(\w+)\s+import')
     
     # List of built-in utilities to ignore
-    built_in_utils = {'sys', 'subprocess', 'os', 're', 'pkgutil'}
+    built_in_utils = {
+        'sys', 'subprocess', 'os', 're', 'pkgutil', 'threading', 'time', 
+        'math', 'datetime', 'json', 'logging', 'itertools', 'functools', 
+        'collections', 'heapq', 'copy', 'enum', 'abc', 'types', 'io', 
+        'shutil', 'glob', 'argparse', 'configparser', 'pathlib', 
+        'traceback', 'uuid'
+    }
     
     # Get the list of standard libraries
     std_libs = set(module.name for module in pkgutil.iter_modules() if module.module_finder is None)
