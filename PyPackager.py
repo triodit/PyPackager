@@ -128,6 +128,19 @@ pause
     with open(setup_bat_path, 'w') as setup_file:
         setup_file.write(setup_content)
 
+def create_setup_sh(dest_folder):
+    setup_content = f"""#!/bin/bash
+pip install --no-index --find-links=. -r requirements.txt
+"""
+
+    setup_sh_path = os.path.join(dest_folder, 'setup.sh')
+    with open(setup_sh_path, 'w') as setup_file:
+        setup_file.write(setup_content)
+    
+    # Make the script executable
+    st = os.stat(setup_sh_path)
+    os.chmod(setup_sh_path, st.st_mode | 0o111)
+
 def create_requirements_txt(requirements, dest_folder):
     requirements_txt_path = os.path.join(dest_folder, 'requirements.txt')
     with open(requirements_txt_path, 'w') as req_file:
@@ -150,8 +163,11 @@ def main():
     print("Creating requirements.txt...")
     create_requirements_txt(requirements, dest_folder)
     
-    print("Creating setup.bat...")
+    print("Creating setup.bat for Windows...")
     create_setup_bat(dest_folder)
+    
+    print("Creating setup.sh for Linux...")
+    create_setup_sh(dest_folder)
     
     print("Setup complete.")
 
