@@ -5,6 +5,9 @@ import sys
 import pkgutil
 from pathlib import Path
 
+# Version number
+VERSION = "1_0_0"
+
 # Extended mapping of common import aliases to their actual package names
 alias_to_package = {
     'PIL': 'Pillow',
@@ -99,7 +102,7 @@ def find_requirements(folder_path):
         'math', 'datetime', 'json', 'logging', 'itertools', 'functools', 
         'collections', 'heapq', 'copy', 'enum', 'abc', 'types', 'io', 
         'shutil', 'glob', 'argparse', 'configparser', 'pathlib', 
-        'traceback', 'uuid'
+        'traceback', 'uuid', 'random', 'tkinter', 'sqlite3', 'urllib'
     }
     
     # Get the list of standard libraries
@@ -131,7 +134,7 @@ echo Installation complete. Press any key to exit...
 pause >nul
 """
 
-    setup_bat_path = os.path.join(dest_folder, 'setup.bat')
+    setup_bat_path = os.path.join(dest_folder, f'setup_{VERSION}.bat')
     with open(setup_bat_path, 'w') as setup_file:
         setup_file.write(setup_content)
 
@@ -142,7 +145,7 @@ echo "Installation complete. Press [Enter] to exit..."
 read -r
 """
 
-    setup_sh_path = os.path.join(dest_folder, 'setup.sh')
+    setup_sh_path = os.path.join(dest_folder, f'setup_{VERSION}.sh')
     with open(setup_sh_path, 'w') as setup_file:
         setup_file.write(setup_content)
     
@@ -157,13 +160,14 @@ def create_requirements_txt(requirements, dest_folder):
 
 def main():
     folder_path = "."
-    dest_folder = "dependencies"
+    dest_folder = f"dependencies_{VERSION}"
     
-    print("Scanning for dependencies...")
+    print(f"Scanning for dependencies... (Version {VERSION})")
     requirements = find_requirements(folder_path)
     
     if not requirements:
         print("No dependencies found.")
+        input("Press Enter to exit...")
         return
     
     print("Downloading dependencies...")
@@ -178,7 +182,7 @@ def main():
     print("Creating setup.sh for Linux...")
     create_setup_sh(dest_folder)
     
-    print("Setup complete.")
+    print(f"Setup complete. (Version {VERSION})")
     
     # Wait for user input before closing
     input("Press Enter to exit...")
