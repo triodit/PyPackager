@@ -127,7 +127,8 @@ def create_setup_bat(dest_folder):
     setup_content = f"""
 @echo off
 pip install --no-index --find-links=. -r requirements.txt
-pause
+echo Installation complete. Press any key to exit...
+pause >nul
 """
 
     setup_bat_path = os.path.join(dest_folder, 'setup.bat')
@@ -137,6 +138,8 @@ pause
 def create_setup_sh(dest_folder):
     setup_content = f"""#!/bin/bash
 pip install --no-index --find-links=. -r requirements.txt
+echo "Installation complete. Press [Enter] to exit..."
+read -r
 """
 
     setup_sh_path = os.path.join(dest_folder, 'setup.sh')
@@ -176,6 +179,9 @@ def main():
     create_setup_sh(dest_folder)
     
     print("Setup complete.")
+    
+    # Wait for user input before closing
+    input("Press Enter to exit...")
 
 if __name__ == "__main__":
     main()
