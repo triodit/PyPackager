@@ -5,11 +5,96 @@ import sys
 import pkgutil
 from pathlib import Path
 
+# Extended mapping of common import aliases to their actual package names
+alias_to_package = {
+    'PIL': 'Pillow',
+    'cv2': 'opencv-python',
+    'pd': 'pandas',
+    'np': 'numpy',
+    'plt': 'matplotlib.pyplot',
+    'sns': 'seaborn',
+    'sklearn': 'scikit-learn',
+    'tf': 'tensorflow',
+    'torch': 'torch',
+    'tfds': 'tensorflow-datasets',
+    'sp': 'scipy',
+    'skimage': 'scikit-image',
+    'yaml': 'pyyaml',
+    'h5py': 'h5py',
+    'mpl': 'matplotlib',
+    'mpld3': 'mpld3',
+    'sqlite3': 'sqlite3',
+    'urllib': 'urllib3',
+    'BeautifulSoup': 'beautifulsoup4',
+    'Crypto': 'pycryptodome',
+    'Image': 'Pillow',
+    'tkinter': 'tkinter',
+    'sh': 'sh',
+    'requests': 'requests',
+    'flask': 'Flask',
+    'django': 'Django',
+    'bs4': 'beautifulsoup4',
+    'jinja2': 'Jinja2',
+    'pyodbc': 'pyodbc',
+    'sqlalchemy': 'SQLAlchemy',
+    'pytest': 'pytest',
+    'moto': 'moto',
+    'botocore': 'botocore',
+    'boto3': 'boto3',
+    'click': 'Click',
+    'paramiko': 'paramiko',
+    'cryptography': 'cryptography',
+    'PyQt5': 'PyQt5',
+    'PySide2': 'PySide2',
+    'dash': 'dash',
+    'dash_core_components': 'dash',
+    'dash_html_components': 'dash',
+    'plotly': 'plotly',
+    'flask_sqlalchemy': 'Flask-SQLAlchemy',
+    'psycopg2': 'psycopg2-binary',
+    'flask_migrate': 'Flask-Migrate',
+    'wtforms': 'WTForms',
+    'flask_wtf': 'Flask-WTF',
+    'bcrypt': 'bcrypt',
+    'flask_bcrypt': 'Flask-Bcrypt',
+    'pymongo': 'pymongo',
+    'pika': 'pika',
+    'redis': 'redis',
+    'pytz': 'pytz',
+    'dateutil': 'python-dateutil',
+    'sqlparse': 'sqlparse',
+    'mysql': 'mysql-connector-python',
+    'mysqlclient': 'mysqlclient',
+    'gunicorn': 'gunicorn',
+    'celery': 'celery',
+    'openpyxl': 'openpyxl',
+    'xlrd': 'xlrd',
+    'lxml': 'lxml',
+    'jsonschema': 'jsonschema',
+    'pygame': 'pygame',
+    'tweepy': 'tweepy',
+    'discord': 'discord.py',
+    'telegram': 'python-telegram-bot',
+    'cx_Oracle': 'cx_Oracle',
+    'zmq': 'pyzmq',
+    'watchdog': 'watchdog',
+    'pyserial': 'pyserial',
+    'bokeh': 'bokeh',
+    'fastapi': 'fastapi',
+    'uvicorn': 'uvicorn',
+    'aiohttp': 'aiohttp',
+    'openai': 'openai',
+    # Continue adding more entries as needed
+}
+
 def find_requirements(folder_path):
     requirements = set()
     py_files = Path(folder_path).rglob("*.py")
     
     import_pattern = re.compile(r'^\s*import\s+(\w+)|^\s*from\s+(\w+)\s+import')
+    
+    # List of built-in utilities to ignore
+    built_in_utils = {'sys', 'subprocess', 'os', 're', 'pkgutil'}
     
     # Get the list of standard libraries
     std_libs = set(module.name for module in pkgutil.iter_modules() if module.module_finder is None)
@@ -20,8 +105,10 @@ def find_requirements(folder_path):
                 match = import_pattern.match(line)
                 if match:
                     module = match.group(1) or match.group(2)
-                    if module and not module.startswith('_') and module not in std_libs:
-                        requirements.add(module)
+                    if module and not module.startswith('_') and module not in std_libs and module not in built_in_utils:
+                        # Translate alias to actual package name if applicable
+                        package_name = alias_to_package.get(module, module)
+                        requirements.add(package_name)
     
     return list(requirements)
 

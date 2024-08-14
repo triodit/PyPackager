@@ -1,6 +1,1 @@
-re
-os
-sys
-subprocess
-pkgutil
 pathlib
